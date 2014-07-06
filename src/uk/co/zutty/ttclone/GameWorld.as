@@ -1,5 +1,6 @@
 package uk.co.zutty.ttclone {
     import net.flashpunk.Entity;
+    import net.flashpunk.FP;
     import net.flashpunk.World;
     import net.flashpunk.graphics.Image;
     import net.flashpunk.graphics.Tilemap;
@@ -12,6 +13,7 @@ package uk.co.zutty.ttclone {
 
         public static const MODE_BUILD_ROAD:uint = 1;
         public static const MODE_BUILD_BUS_STOP:uint = 2;
+        public static const MAP_SIZE:Number = 64;
 
         [Embed(source="/select.png")]
         private static const SELECT_IMAGE:Class;
@@ -36,11 +38,11 @@ package uk.co.zutty.ttclone {
         private var _prevBusStop:BusStop;
 
         public function GameWorld() {
-            _background = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
-            _background.setRect(0, 0, 10, 13, 0);
+            _background = new Tilemap(TILES_IMAGE, MAP_SIZE * TILE_SIZE, MAP_SIZE * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            _background.setRect(0, 0, MAP_SIZE, MAP_SIZE, 0);
             addGraphic(_background);
 
-            _road = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
+            _road = new Tilemap(TILES_IMAGE, MAP_SIZE * TILE_SIZE, MAP_SIZE * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             addGraphic(_road);
 
             _roadPathfinder = new Pathfinder(_road);
@@ -64,6 +66,20 @@ package uk.co.zutty.ttclone {
             _select.x = mouseTileX * TILE_SIZE;
             _select.y = mouseTileY * TILE_SIZE;
 
+            if(Input.check(Key.RIGHT)) {
+                FP.camera.x++;
+                FP.camera.x = FP.clamp(FP.camera.x, 0, _background.width - FP.width);
+            } else if(Input.check(Key.LEFT)) {
+                FP.camera.x--;
+                FP.camera.x = FP.clamp(FP.camera.x, 0, _background.width - FP.width);
+            }
+            if(Input.check(Key.DOWN)) {
+                FP.camera.y++;
+                FP.camera.y = FP.clamp(FP.camera.y, 0, _background.height - FP.height);
+            } else if(Input.check(Key.UP)) {
+                FP.camera.y--;
+                FP.camera.y = FP.clamp(FP.camera.y, 0, _background.height - FP.height);
+            }
 
             if(_mode == MODE_BUILD_ROAD) {
                 if (Input.mouseDown) {
