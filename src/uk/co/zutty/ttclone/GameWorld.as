@@ -12,6 +12,9 @@ package uk.co.zutty.ttclone {
 
     public class GameWorld extends World {
 
+        public static const MODE_BUILD_ROAD:uint = 1;
+        public static const MODE_BUILD_BUS_STOP:uint = 2;
+
         [Embed(source="/select.png")]
         private static const SELECT_IMAGE:Class;
 
@@ -38,6 +41,10 @@ package uk.co.zutty.ttclone {
         private var _lastMouseTileX:int = -1;
         private var _lastMouseTileY:int = -1;
 
+        private var _mode:uint = MODE_BUILD_ROAD;
+
+        private var _busStop:BusStop;
+
         public function GameWorld() {
             _background = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
             _background.setRect(0, 0, 10, 13, 0);
@@ -48,7 +55,6 @@ package uk.co.zutty.ttclone {
 
             _select = new Entity();
             _select.graphic = new Image(SELECT_IMAGE);
-            //_select.visible = false;
             add(_select);
         }
 
@@ -58,27 +64,60 @@ package uk.co.zutty.ttclone {
             var mouseTileX:uint = Math.floor(mouseX / TILE_SIZE);
             var mouseTileY:uint = Math.floor(mouseY / TILE_SIZE);
 
+            _select.visible = _mode == MODE_BUILD_ROAD;
             _select.x = mouseTileX * TILE_SIZE;
             _select.y = mouseTileY * TILE_SIZE;
 
-            if (Input.mouseDown) {
-                if (!(mouseTileX == _lastMouseTileX && mouseTileY == _lastMouseTileY)) {
-                    var roadChanged: Boolean = Input.check(Key.SHIFT)
-                            ? Boolean(clearRoad(mouseTileX, mouseTileY))
-                            : Boolean(setRoad(mouseTileX, mouseTileY, true));
+            if(_mode == MODE_BUILD_ROAD) {
+                if (Input.mouseDown) {
+                    if (!(mouseTileX == _lastMouseTileX && mouseTileY == _lastMouseTileY)) {
+                        var roadChanged: Boolean = Input.check(Key.SHIFT)
+                                ? Boolean(clearRoad(mouseTileX, mouseTileY))
+                                : Boolean(setRoad(mouseTileX, mouseTileY, true));
 
-                    if (roadChanged) {
-                        var buildSoundChannel:SoundChannel = _buildSound.play();
-                        buildSoundChannel.addEventListener(Event.SOUND_COMPLETE, onBuildSoundComplete);
-                        ++_constructionSoundsQueued;
+                        if (roadChanged) {
+                            var buildSoundChannel:SoundChannel = _buildSound.play();
+                            buildSoundChannel.addEventListener(Event.SOUND_COMPLETE, onBuildSoundComplete);
+                            ++_constructionSoundsQueued;
+                        }
+
+                        _lastMouseTileX = mouseTileX;
+                        _lastMouseTileY = mouseTileY;
                     }
-
-                    _lastMouseTileX = mouseTileX;
-                    _lastMouseTileY = mouseTileY;
+                } else {
+                    _lastMouseTileX = -1;
+                    _lastMouseTileY = -1;
                 }
-            } else {
-                _lastMouseTileX = -1;
-                _lastMouseTileY = -1;
+
+                if(Input.pressed(Key.B)) {
+                    _mode = MODE_BUILD_BUS_STOP;
+                    _busStop = new BusStop();
+                    add(_busStop);
+                    trace("ADD BUS STOP");
+                }
+            }
+
+            if(_mode == MODE_BUILD_BUS_STOP) {
+                _busStop.x = mouseTileX * TILE_SIZE;
+                _busStop.y = mouseTileY * TILE_SIZE;
+
+                var roadTile:uint = _road.getTile(mouseTileX, mouseTileY);
+                var valid:Boolean = roadTile == 1 || roadTile == 2;
+
+                _busStop.ns = roadTile == 1;
+                _busStop.validBuild = valid;
+
+                if(valid && Input.mousePressed) {
+                    _mode = MODE_BUILD_ROAD;
+                    _busStop.built = true;
+                    _busStop = null;
+
+                    var bus:Bus = new Bus();
+                    bus.x = (mouseTileX * TILE_SIZE) + 8;
+                    bus.y = (mouseTileY * TILE_SIZE) + 8;
+                    bus.ns = roadTile == 1;
+                    add(bus);
+                }
             }
         }
 
