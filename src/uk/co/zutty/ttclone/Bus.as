@@ -59,6 +59,13 @@ package uk.co.zutty.ttclone {
             return x == destX && y == destY;
         }
 
+        override public function moveBy(x:Number, y:Number, solidType:Object = null, sweep:Boolean = false):void {
+            super.moveBy(x, y, solidType, sweep);
+
+            _direction = (x == 0) ? ((y > 0 ? "s" : "n")) : (x > 0 ? "e" : "w");
+            updateSprite();
+        }
+
         override public function update():void {
             if(_path.length > 0) {
                 var destX:Number = _path[0].x + 8;
