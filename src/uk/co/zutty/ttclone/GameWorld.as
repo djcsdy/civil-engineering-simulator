@@ -19,8 +19,8 @@ package uk.co.zutty.ttclone {
         private var _road:Tilemap;
         private var _select:Entity;
 
-        private var _lastMouseTileX:uint = -1;
-        private var _lastMouseTileY:uint = -1;
+        private var _lastMouseTileX:int = -1;
+        private var _lastMouseTileY:int = -1;
 
         public function GameWorld() {
             _background = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
@@ -45,15 +45,18 @@ package uk.co.zutty.ttclone {
             _select.x = mouseTileX * TILE_SIZE;
             _select.y = mouseTileY * TILE_SIZE;
 
-            if(Input.mouseDown && !(mouseTileX == _lastMouseTileX && mouseTileY == _lastMouseTileY)) {
-                //trace(_road.getTile(mouseTileX, mouseTileY - 1));
+            if (Input.mouseDown) {
+                if (!(mouseTileX == _lastMouseTileX && mouseTileY == _lastMouseTileY)) {
+                    Input.check(Key.SHIFT)
+                            ? clearRoad(mouseTileX, mouseTileY)
+                            : setRoad(mouseTileX, mouseTileY, true);
 
-                Input.check(Key.SHIFT)
-                    ? clearRoad(mouseTileX, mouseTileY)
-                    : setRoad(mouseTileX, mouseTileY, true);
-
-                _lastMouseTileX = mouseTileX;
-                _lastMouseTileY = mouseTileY;
+                    _lastMouseTileX = mouseTileX;
+                    _lastMouseTileY = mouseTileY;
+                }
+            } else {
+                _lastMouseTileX = -1;
+                _lastMouseTileY = -1;
             }
         }
 
