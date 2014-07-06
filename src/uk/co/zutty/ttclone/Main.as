@@ -11,5 +11,9 @@ package uk.co.zutty.ttclone {
 
             FP.world = new GameWorld();
         }
+
+        public static function get gameWorld():GameWorld {
+            return FP.world as GameWorld;
+        }
     }
 }
