@@ -5,6 +5,7 @@ package uk.co.zutty.ttclone {
     public class Bus extends Entity {
 
         private static const SPEED:Number = 0.5;
+        private static const WAIT_TIME:int = 100;
 
         [Embed(source="/bus.png")]
         private static const BUS_IMAGE:Class;
@@ -15,6 +16,7 @@ package uk.co.zutty.ttclone {
         private var _stops:Vector.<BusStop> = new Vector.<BusStop>();
         private var _destination:uint = 0;
         private var _path:Array;
+        private var _wait:int = 0;
 
         public function Bus() {
             _sprite = new Spritemap(BUS_IMAGE, 12, 12);
@@ -31,6 +33,7 @@ package uk.co.zutty.ttclone {
 
         override public function added():void {
             _direction = "e";
+            _wait = WAIT_TIME;
             updateSprite();
         }
 
@@ -62,12 +65,14 @@ package uk.co.zutty.ttclone {
         override public function moveBy(x:Number, y:Number, solidType:Object = null, sweep:Boolean = false):void {
             super.moveBy(x, y, solidType, sweep);
 
-            _direction = (x == 0) ? ((y > 0 ? "s" : "n")) : (x > 0 ? "e" : "w");
+            _direction = (x == 0) ? ((y == 0) ? _direction : (y > 0 ? "s" : "n")) : (x > 0 ? "e" : "w");
             updateSprite();
         }
 
         override public function update():void {
-            if(_path.length > 0) {
+            _wait--;
+
+            if(_path.length > 0 && _wait <= 0) {
                 var destX:Number = _path[0].x + 8;
                 var destY:Number = _path[0].y + 8;
 
@@ -80,6 +85,7 @@ package uk.co.zutty.ttclone {
                         _destination++;
                         if(_destination >= _stops.length) _destination = 0;
                         repath();
+                        _wait = WAIT_TIME;
                     }
                 }
             }
