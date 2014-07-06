@@ -12,6 +12,7 @@ package uk.co.zutty.ttclone {
         private var _ns:Boolean;
         private var _built:Boolean;
         private var _validBuild:Boolean;
+        private var _next:BusStop;
 
         public function BusStop() {
             _sprite = new Spritemap(BUS_STOP_IMAGE, 16, 16);
@@ -47,6 +48,10 @@ package uk.co.zutty.ttclone {
         public function set validBuild(value:Boolean):void {
             _validBuild = value;
             updateSprite();
+        }
+
+        public function set next(value:BusStop):void {
+            _next = value;
         }
 
         private function updateSprite():void {

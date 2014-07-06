@@ -6,6 +6,8 @@ package uk.co.zutty.ttclone {
     import net.flashpunk.utils.Input;
     import net.flashpunk.utils.Key;
 
+    import uk.co.zutty.ttclone.path.Pathfinder;
+
     public class GameWorld extends World {
 
         public static const MODE_BUILD_ROAD:uint = 1;
@@ -19,7 +21,10 @@ package uk.co.zutty.ttclone {
         private static const TILE_SIZE:uint = 16;
 
         private var _background:Tilemap;
+
         private var _road:Tilemap;
+        private var _roadPathfinder:Pathfinder;
+
         private var _select:Entity;
 
         private var _lastMouseTileX:int = -1;
@@ -28,6 +33,7 @@ package uk.co.zutty.ttclone {
         private var _mode:uint = MODE_BUILD_ROAD;
 
         private var _busStop:BusStop;
+        private var _prevBusStop:BusStop;
 
         public function GameWorld() {
             _background = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
@@ -37,9 +43,15 @@ package uk.co.zutty.ttclone {
             _road = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
             addGraphic(_road);
 
+            _roadPathfinder = new Pathfinder(_road);
+
             _select = new Entity();
             _select.graphic = new Image(SELECT_IMAGE);
             add(_select);
+        }
+
+        public function get roadPathfinder():Pathfinder {
+            return _roadPathfinder;
         }
 
         override public function update():void {
@@ -89,13 +101,21 @@ package uk.co.zutty.ttclone {
                 if(valid && Input.mousePressed) {
                     _mode = MODE_BUILD_ROAD;
                     _busStop.built = true;
-                    _busStop = null;
 
-                    var bus:Bus = new Bus();
-                    bus.x = (mouseTileX * TILE_SIZE) + 8;
-                    bus.y = (mouseTileY * TILE_SIZE) + 8;
-                    bus.ns = roadTile == 1;
-                    add(bus);
+                    if(_prevBusStop != null) {
+                        var bus:Bus = new Bus();
+                        bus.x = (mouseTileX * TILE_SIZE) + 8;
+                        bus.y = (mouseTileY * TILE_SIZE) + 8;
+                        bus.ns = roadTile == 1;
+                        bus.addStop(_busStop);
+                        bus.addStop(_prevBusStop);
+                        bus.repath();
+                        add(bus);
+                    }
+
+                    _prevBusStop = _busStop;
+
+                    _busStop = null;
                 }
             }
         }
