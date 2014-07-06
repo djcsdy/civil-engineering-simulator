@@ -42,7 +42,7 @@ package uk.co.zutty.ttclone.path {
 
                 // Sort the open list
                 open.sort(function (a:Node, b:Node):Number {
-                    return b.cost - a.cost;
+                    return a.cost - b.cost;
                 });
             }
 
