@@ -58,10 +58,10 @@ package uk.co.zutty.ttclone {
         }
 
         private function setRoad(tileX:uint, tileY:uint, recurse:Boolean):void {
-            var n:Boolean = _road.getTile(tileX, tileY - 1) > 0;
-            var s:Boolean = _road.getTile(tileX, tileY + 1) > 0;
-            var w:Boolean = _road.getTile(tileX - 1, tileY) > 0;
-            var e:Boolean = _road.getTile(tileX + 1, tileY) > 0;
+            var n:Boolean = tileY > 0 && _road.getTile(tileX, tileY - 1) > 0;
+            var s:Boolean = tileY < _road.rows - 1 && _road.getTile(tileX, tileY + 1) > 0;
+            var w:Boolean = tileX > 0 && _road.getTile(tileX - 1, tileY) > 0;
+            var e:Boolean = tileX < _road.columns -1 && _road.getTile(tileX + 1, tileY) > 0;
 
             var tile:uint = 1;
 
