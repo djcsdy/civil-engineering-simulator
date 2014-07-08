@@ -48,7 +48,6 @@ package uk.co.zutty.ttclone {
 
             _select = new Entity();
             _select.graphic = new Image(SELECT_IMAGE);
-            //_select.visible = false;
             add(_select);
         }
 
@@ -63,7 +62,7 @@ package uk.co.zutty.ttclone {
 
             if (Input.mouseDown) {
                 if (!(mouseTileX == _lastMouseTileX && mouseTileY == _lastMouseTileY)) {
-                    var roadChanged: Boolean = Input.check(Key.SHIFT)
+                    var roadChanged:Boolean = Input.check(Key.SHIFT)
                             ? Boolean(clearRoad(mouseTileX, mouseTileY))
                             : Boolean(setRoad(mouseTileX, mouseTileY, true));
 
