@@ -183,16 +183,5 @@ package uk.co.zutty.ttclone {
 
             return changed;
         }
-
-        private function getAdjacency(tilemap:Tilemap, tileX:uint, tileY:uint):Object {
-            var adj:Object = new Object();
-
-            adj.n = tilemap.getTile(tileX, tileY - 1) > 0;
-            adj.s = tilemap.getTile(tileX, tileY + 1) > 0;
-            adj.w = tilemap.getTile(tileX - 1, tileY) > 0;
-            adj.e = tilemap.getTile(tileX + 1, tileY) > 0;
-
-            return adj;
-        }
     }
 }
