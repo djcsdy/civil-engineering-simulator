@@ -16,6 +16,9 @@ package uk.co.zutty.ttclone {
 
     public class GameWorld extends World {
 
+        private static const TILES_H:int = Math.ceil(Main.WIDTH / TILE_SIZE);
+        private static const TILES_V:int = Math.ceil(Main.HEIGHT / TILE_SIZE);
+
         [Embed(source="/select.png")]
         private static const SELECT_IMAGE:Class;
 
@@ -40,19 +43,19 @@ package uk.co.zutty.ttclone {
         private var _select:Entity;
 
         private var _score:int = 0;
-        private var _scoreText:Text = new Text("0 XDG", 0, 0, {align: TextAlign.RIGHT, width: 150});
+        private var _scoreText:Text = new Text("0 XDG", 0, 0, {align: TextAlign.RIGHT, width: Main.WIDTH});
 
-        private var _scoredRoad:BitmapData = new BitmapData(Math.ceil(160 / TILE_SIZE), Math.ceil(208 / TILE_SIZE));
+        private var _scoredRoad:BitmapData = new BitmapData(TILES_H, TILES_V);
 
         private var _lastMouseTileX:int = -1;
         private var _lastMouseTileY:int = -1;
 
         public function GameWorld() {
-            _background = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
-            _background.setRect(0, 0, 10, 13, 0);
+            _background = new Tilemap(TILES_IMAGE, Main.WIDTH, Main.HEIGHT, TILE_SIZE, TILE_SIZE);
+            _background.setRect(0, 0, TILES_H, TILES_V, 0);
             addGraphic(_background);
 
-            _road = new Tilemap(TILES_IMAGE, 160, 208, TILE_SIZE, TILE_SIZE);
+            _road = new Tilemap(TILES_IMAGE, Main.WIDTH, Main.HEIGHT, TILE_SIZE, TILE_SIZE);
             addGraphic(_road);
 
             _select = new Entity();

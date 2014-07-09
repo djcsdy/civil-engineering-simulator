@@ -7,12 +7,15 @@ package uk.co.zutty.ttclone {
         Text.size = 8;
     }
 
-    [SWF(width="600", height="800", frameRate="60", backgroundColor="000000")]
+    [SWF(width="768", height="480", frameRate="60", backgroundColor="000000")]
     public class Main extends Engine {
-        public function Main() {
-            super(150, 200, 60, true);
+        public static const WIDTH:int = 384;
+        public static const HEIGHT:int = 240;
 
-            FP.screen.scale = 4;
+        public function Main() {
+            super(WIDTH, HEIGHT, 60, true);
+
+            FP.screen.scale = 2;
 
             FP.world = new GameWorld();
         }
