@@ -1,6 +1,11 @@
 package uk.co.zutty.ttclone {
     import net.flashpunk.Engine;
     import net.flashpunk.FP;
+    import net.flashpunk.graphics.Text;
+
+    {
+        Text.size = 8;
+    }
 
     [SWF(width="600", height="800", frameRate="60", backgroundColor="000000")]
     public class Main extends Engine {

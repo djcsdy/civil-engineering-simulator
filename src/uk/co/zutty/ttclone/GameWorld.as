@@ -1,11 +1,15 @@
 package uk.co.zutty.ttclone {
+    import flash.display.BitmapData;
     import flash.events.Event;
     import flash.media.Sound;
     import flash.media.SoundChannel;
 
+    import flashx.textLayout.formats.TextAlign;
+
     import net.flashpunk.Entity;
     import net.flashpunk.World;
     import net.flashpunk.graphics.Image;
+    import net.flashpunk.graphics.Text;
     import net.flashpunk.graphics.Tilemap;
     import net.flashpunk.utils.Input;
     import net.flashpunk.utils.Key;
@@ -35,6 +39,11 @@ package uk.co.zutty.ttclone {
         private var _road:Tilemap;
         private var _select:Entity;
 
+        private var _score:int = 0;
+        private var _scoreText:Text = new Text("0 XDG", 0, 0, {align: TextAlign.RIGHT, width: 150});
+
+        private var _scoredRoad:BitmapData = new BitmapData(Math.ceil(160 / TILE_SIZE), Math.ceil(208 / TILE_SIZE));
+
         private var _lastMouseTileX:int = -1;
         private var _lastMouseTileY:int = -1;
 
@@ -49,6 +58,8 @@ package uk.co.zutty.ttclone {
             _select = new Entity();
             _select.graphic = new Image(SELECT_IMAGE);
             add(_select);
+
+            addGraphic(_scoreText);
         }
 
         override public function update():void {
@@ -70,6 +81,7 @@ package uk.co.zutty.ttclone {
                         var buildSoundChannel:SoundChannel = _buildSound.play();
                         buildSoundChannel.addEventListener(Event.SOUND_COMPLETE, onBuildSoundComplete);
                         ++_constructionSoundsQueued;
+                        scoreRoad(mouseTileX, mouseTileY);
                     }
 
                     _lastMouseTileX = mouseTileX;
@@ -182,6 +194,39 @@ package uk.co.zutty.ttclone {
             }
 
             return changed;
+        }
+
+        private function score(points:int):void {
+            _score += points;
+            _scoreText.text = _score + " XDG";
+        }
+
+        private function scoreRoad(tileX:uint, tileY:uint):void {
+            _scoredRoad.fillRect(_scoredRoad.rect, 0xff000000);
+
+            score(scoreRoadRecurse(tileX, tileY));
+        }
+
+        private function scoreRoadRecurse(tileX:uint, tileY:uint):int {
+            if (tileX < 0 || tileX > _road.columns - 1
+                    || tileY < 0 || tileY > _road.rows - 1) {
+                return 0;
+            }
+
+            if (_road.getTile(tileX, tileY) == 0) {
+                return 0;
+            }
+
+            if (_scoredRoad.getPixel(tileX, tileY) > 0) {
+                return 0;
+            }
+
+            _scoredRoad.setPixel(tileX, tileY, 1);
+
+            return 1 + scoreRoadRecurse(tileX, tileY - 1)
+                    + scoreRoadRecurse(tileX, tileY + 1)
+                    + scoreRoadRecurse(tileX - 1, tileY)
+                    + scoreRoadRecurse(tileX + 1, tileY);
         }
     }
 }
