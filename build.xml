@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Ludum Dare Basecode" default="build">
+<project name="Civil Engineering Simulator" default="build">
   
-  <property name="preloader.class" value="net.noiseinstitute.game.Preloader"/>
-  <property name="main.class" value="net.noiseinstitute.game.Main"/>
+  <property name="preloader.class" value="uk.co.zutty.ttclone.Preloader"/>
+  <property name="main.class" value="uk.co.zutty.ttclone.Main"/>
   
   <property name="minimum.ant.version" value="1.8.0"/>
   
@@ -11,6 +11,7 @@
   <property name="FLEX_HOME" location="${env.FLEX_HOME}"/>
   
   <property name="src.dir" location="src"/>
+  <property name="assets.dir" location="assets/"/>
   <property name="lib.dir" location="lib"/>
   <property name="build.dir" location="build"/>
   
@@ -62,6 +63,7 @@
         debug="false" strict="true">
       <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
       <source-path path-element="${src.dir}"/>
+      <source-path path-element="${assets.dir}"/>
       <source-path path-element="${lib.flashpunk.dir}"/>
       <source-path path-element="${FLEX_HOME}/frameworks"/>
       <frame label="start" className="${main.class}"/>

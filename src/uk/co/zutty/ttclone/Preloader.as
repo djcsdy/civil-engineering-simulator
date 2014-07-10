@@ -1,4 +1,4 @@
-package net.noiseinstitute.game {
+package uk.co.zutty.ttclone {
     import flash.display.DisplayObject;
     import flash.display.Shape;
     import flash.display.Sprite;
@@ -9,15 +9,15 @@ package net.noiseinstitute.game {
     import flash.utils.getDefinitionByName;
 
     [SWF(width="640", height="480", frameRate="60", backgroundColor="000000")]
-    [Frame(factoryClass="net.noiseinstitute.game.Main")]
+    [Frame(factoryClass="uk.co.zutty.ttclone.Main")]
     public class Preloader extends Sprite {
-        private static const MAIN_CLASS_NAME:String = "net.noiseinstitute.game.Main";
+        private static const MAIN_CLASS_NAME:String = "uk.co.zutty.ttclone.Main";
 
         private static const BACKGROUND_COLOUR:uint = 0x000000;
         private static const FOREGROUND_COLOUR:uint = 0xFFFFFF;
 
         //noinspection JSUnusedLocalSymbols
-        [Embed(source="/net/flashpunk/graphics/04B_03__.TTF", embedAsCFF="false", fontFamily="default")]
+        [Embed(source="/../../ld-basecode/lib/FlashPunk-1.7.2/net/flashpunk/graphics/04B_03__.TTF", embedAsCFF="false", fontFamily="default")]
         private static const FONT:Class;
 
         private var progressBar:Shape;
