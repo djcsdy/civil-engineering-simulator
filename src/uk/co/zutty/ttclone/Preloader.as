@@ -8,7 +8,7 @@ package uk.co.zutty.ttclone {
     import flash.text.TextFormat;
     import flash.utils.getDefinitionByName;
 
-    [SWF(width="640", height="480", frameRate="60", backgroundColor="000000")]
+    [SWF(width="768", height="480", frameRate="60", backgroundColor="000000")]
     [Frame(factoryClass="uk.co.zutty.ttclone.Main")]
     public class Preloader extends Sprite {
         private static const MAIN_CLASS_NAME:String = "uk.co.zutty.ttclone.Main";
